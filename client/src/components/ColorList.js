@@ -6,10 +6,16 @@ const initialColor = {
   code: { hex: "" }
 };
 
+const addedColor = {
+  color: "",
+  code: {hex: ""}
+}
+
 const ColorList = ({ colors, updateColors }) => {
   console.log(colors);
   const [editing, setEditing] = useState(false);
   const [colorToEdit, setColorToEdit] = useState(initialColor);
+  const [colorToAdd, setColorToAdd] = useState(addedColor);
 
   const editColor = color => {
     setEditing(true);
@@ -29,8 +35,25 @@ const ColorList = ({ colors, updateColors }) => {
 
   const deleteColor = color => {
     // make a delete request to delete this color
-    
+    axiosWithAuth()
+    .delete(`http://localhost:5000/api/colors/${color.id}`)
+    .then(res => {
+      updateColors(res.data)
+    })
+    .catch(err =>{
+      console.log(err);
+    })
   };
+  const addColor =() =>{
+    axiosWithAuth()
+    .post('http://localhost:5000/api/colors', colorToAdd)
+    .then(res =>{
+      updateColors(res.data)
+    })
+    .catch(err =>{
+      console.log(err);
+    })
+  }
 
   return (
     <div className="colors-wrap">
@@ -86,7 +109,19 @@ const ColorList = ({ colors, updateColors }) => {
         </form>
       )}
       <div className="spacer" />
-      {/* stretch - build another form here to add a color */}
+      <form>
+        <input
+        type="text"
+        placeholder="enter color name"
+        onChange={e => {setColorToAdd({...colorToAdd, color: e.target.value})}}
+        />
+        <input
+        type="text"
+        placeholder="enterhex code"
+        onChange={e => {setColorToAdd({...colorToAdd, code:{ hex: e.target.value}})}}
+        />
+        <button onClick={addColor}>Dont Forget The Button</button>
+      </form>
     </div>
   );
 };
