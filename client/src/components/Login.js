@@ -6,6 +6,7 @@ const Login = (props) => {
   // when you have handled the token, navigate to the BubblePage route
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
+  console.log(props)
 
   const onLogin = (e) =>{
     e.preventDefault();
